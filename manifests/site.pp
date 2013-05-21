@@ -93,7 +93,8 @@ node default {
   include osx::finder::empty_trash_securely
   include osx::finder::unhide_library
   include osx::universal_access::ctrl_mod_zoom
-  
+ 
+  include osx::global::key_repeat_delay
   class { 'osx::global::key_repeat_delay':
     delay => 0
   }
