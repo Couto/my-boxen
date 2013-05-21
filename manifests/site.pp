@@ -49,6 +49,7 @@ Service {
 Homebrew::Formula <| |> -> Package <| |>
 
 node default {
+
   # core modules, needed for most things
   include dnsmasq
   include git
@@ -78,33 +79,42 @@ node default {
 
   # Install Sublme packages
   sublime_text_3::package { "Package Control":
-    source => "wbond/sublime_package_control"
+    source => "wbond/sublime_package_control",
   }
 
   sublime_text_3::package { "SublimeLinter":
-    source => "SublimeLinter/SublimeLinter"
+    source => "SublimeLinter/SublimeLinter",
   }
 
   # Set OSX configurations
-  osx::recovery_message { "If this Mac is found, please call (+351) 919 427 831": }
-  osx::global::enable_keyboard_control_access
+    
+  include osx::global::enable_keyboard_control_access
+  include osx::finder::show_all_on_desktop
+  include osx::finder::empty_trash_securely
+  include osx::finder::unhide_library
+  include osx::universal_access::ctrl_mod_zoom
+  
+  class { 'osx::global::key_repeat_delay':
+    delay => 0
+  }
 
-  osx::finder::show_all_on_desktop
-  osx::universal_access::ctrl_mod_zoom
-
-  osx::global::key_repeat_delay
-  osx::global::key_repeat_rate
+  include osx::global::key_repeat_rate
+  
+  osx::recovery_message { 
+    'If this Mac is found, please call (+351) 919 427 831':
+  }
 
   # Clone my dotfiles
-  repository { '/Users/%{::boxen_user}/.dotfiles':
-    source => 'Couto/.dotfiles',
-    provider => 'git'
+  repository { 'Personal dotfiles' : 
+    source => "/Users/${::boxen_user}/.dotfiles",
+    path => 'Couto/.dotfiles',
+    provider => 'git',
   }
 
   # Link vim folder and Install vim bundles (Dont forget to clone the rep)
-  file { "/Users/${::boxen_user}/.vim":
+  file { "/Users/${::boxen_user}/.vim" :
     target => "/Users/${::boxen_user}/.dotfiles/link/vim",
-    require => Repository["/Users/${::boxen_user}/.dotfiles"]
+    require => Repository["/Users/${::boxen_user}/.dotfiles"],
   }
 
   vim::bundle { 'scrooloose/syntastic': }
@@ -180,11 +190,11 @@ node default {
     require => Repository["/Users/${::boxen_user}/.dotfiles"]
   }
 
-  file { "/Users/${{::boxen_user}}/Library/Fonts/Menlo-ForPowerline.ttc":
+  file { "/Users/${::boxen_user}/Library/Fonts/Menlo-ForPowerline.ttc":
     ensure => present,
     source => "/Users/${::boxen_user}/.dotfiles/font/Menlo-ForPowerline.ttc",
     mode => 0644,
-    owner => ${{::boxen_user}},
+    owner => $boxen_user,
     group => 'staff'
   }
 }
