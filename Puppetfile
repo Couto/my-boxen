@@ -44,5 +44,6 @@ github "zsh",               "1.0.0"
 github "sublime_text_3",    "0.0.3", :repo => "puppetcarl/puppet-sublime_text_3"
 github "property_list_key", "0.1.0"
 github "osx",               "1.3.0"
+
 # Optional/custom modules. There are tons available at
 # https://github.com/boxen.
