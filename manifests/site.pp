@@ -53,17 +53,66 @@ node default {
   include dnsmasq
   include git
   include hub
-  include nginx
+  include iterm2::dev
+  include phantomjs::1_9_0
+  include virtualbox
+  include vagrant
+  include caffeine
+  include firefox
+  include firefox::nightly
+  include chrome::dev
+  include chrome::canary
+  include imageoptim
+  include vim
+  include alfred
+  include skype
+  include zsh
+  include sublime_text_3
+  include osx
+  include repository
 
   # fail if FDE is not enabled
   if $::root_encrypted == 'no' {
     fail('Please enable full disk encryption and try again')
   }
 
+  # Install Sublme packages
+  sublime_text_3::package { "Package Control":
+    source => "wbond/sublime_package_control"
+  }
+
+  sublime_text_3::package { "SublimeLinter":
+    source => "SublimeLinter/SublimeLinter"
+  }
+
+  # Set OSX configurations
+  osx::recovery_message { "If this Mac is found, please call (+351) 919 427 831": }
+  osx::global::enable_keyboard_control_access
+
+  osx::finder::show_all_on_desktop
+  osx::universal_access::ctrl_mod_zoom
+
+  osx::global::key_repeat_delay
+  osx::global::key_repeat_rate
+
+  # Clone my dotfiles
+  repository { '/Users/%{::boxen_user}/.dotfiles':
+    source => 'Couto/.dotfiles',
+    provider => 'git'
+  }
+
+  # Link vim folder and Install vim bundles (Dont forget to clone the rep)
+  file { "/Users/${::boxen_user}/.vim":
+    target => "/Users/${::boxen_user}/.dotfiles/link/vim",
+    require => Repository["/Users/${::boxen_user}/.dotfiles"]
+  }
+
+  vim::bundle { 'scrooloose/syntastic': }
+  vim::bundle { 'scrooloose/nerdtree': }
+  vim::bundle { 'Lokaltog/powerline': }
+  vim::bundle { 'kien/ctrlp.vim': }
+
   # node versions
-  include nodejs::v0_4
-  include nodejs::v0_6
-  include nodejs::v0_8
   include nodejs::v0_10
 
   # default ruby versions
@@ -77,12 +126,65 @@ node default {
     [
       'ack',
       'findutils',
-      'gnu-tar'
+      'gnu-tar',
+      'tmux',
+      'git-extras',
+      'htop-osx',
+      'nmap',
+      'tree',
+      'z',
+      'ctags',
+      'lesspipe'
     ]:
   }
 
   file { "${boxen::config::srcdir}/our-boxen":
     ensure => link,
     target => $boxen::config::repodir
+  }
+
+  # Link all files from my dotfiles folder
+  file { "/Users/${::boxen_user}/.gitconfig":
+    ensure => link,
+    target => "/Users/${::boxen_user}/.dotfiles/link/gitconfig",
+    require => Repository["/Users/${::boxen_user}/.dotfiles"]
+  }
+
+  file { "/Users/${::boxen_user}/.zshrc":
+    ensure => link,
+    target => "/Users/${::boxen_user}/.dotfiles/link/zshrc",
+    require => Repository["/Users/${::boxen_user}/.dotfiles"]
+  }
+
+  file { "/Users/${::boxen_user}/.vimrc":
+    ensure => link,
+    target => "/Users/${::boxen_user}/.dotfiles/link/vimrc",
+    require => Repository["/Users/${::boxen_user}/.dotfiles"]
+  }
+
+  file { "/Users/${::boxen_user}/.tmux.conf":
+    ensure => link,
+    target => "/Users/${::boxen_user}/.dotfiles/link/tmux.conf",
+    require => Repository["/Users/${::boxen_user}/.dotfiles"]
+  }
+
+  file { "/Users/${::boxen_user}/.tmux-powerlinerc":
+    ensure => link,
+    target => "/Users/${::boxen_user}/.dotfiles/link/tmux-powerlinerc",
+    require => Repository["/Users/${::boxen_user}/.dotfiles"]
+  }
+
+  file { "/Users/${::boxen_user}/.rainbarf.conf":
+    ensure => link,
+    target => "/Users/${::boxen_user}/.dotfiles/link/rainbarf.conf",
+    require => Repository["/Users/${::boxen_user}/.dotfiles"]
+  }
+
+  file { "/Users/${{::boxen_user}}/Library/Fonts/Menlo-ForPowerline.ttc":
+    ensure => present,
+    source => "/Users/${::boxen_user}/.dotfiles/font/Menlo-ForPowerline.ttc",
+    mode => 0644,
+    owner => ${{::boxen_user}},
+    group => 'staff'
   }
 }
