@@ -101,7 +101,7 @@ GITHUBTARBALL
 GITHUBTARBALL
   remote: boxen/puppet-vim
   specs:
-    vim (1.0.2)
+    vim (1.0.3)
 
 GITHUBTARBALL
   remote: boxen/puppet-virtualbox
@@ -152,7 +152,7 @@ DEPENDENCIES
   sublime_text_3 (= 0.0.3)
   sudo (= 1.0.0)
   vagrant (= 2.0.7)
-  vim (= 1.0.2)
+  vim (= 1.0.3)
   virtualbox (= 1.0.2)
   zsh (= 1.0.0)
 

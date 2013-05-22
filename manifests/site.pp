@@ -75,29 +75,29 @@ node default {
   }
 
   # Set OSX configurations
-    
   include osx::global::enable_keyboard_control_access
   include osx::finder::show_all_on_desktop
   include osx::finder::empty_trash_securely
   include osx::finder::unhide_library
   include osx::universal_access::ctrl_mod_zoom
- 
+
   #include osx::global::key_repeat_delay
   class { 'osx::global::key_repeat_delay':
     delay => 0
   }
 
   include osx::global::key_repeat_rate
-  
-  osx::recovery_message { 
+
+  osx::recovery_message {
     'If this Mac is found, please call (+351) 919 427 831':
   }
 
   # Clone my dotfiles
-  repository { 'Personal dotfiles' : 
+  repository { 'Personal dotfiles' :
     path => "/Users/${::boxen_user}/.dotfiles",
     source => 'Couto/.dotfiles',
     provider => 'git',
+    ensure => present,
   }
 
   # Link vim folder and Install vim bundles (Dont forget to clone the rep)
@@ -186,6 +186,7 @@ node default {
     source => "/Users/${::boxen_user}/.dotfiles/font/Menlo-ForPowerline.ttc",
     mode => 0644,
     owner => $boxen_user,
-    group => 'staff'
+    group => 'staff',
+    require => Repository["/Users/${::boxen_user}/.dotfiles"]
   }
 }
