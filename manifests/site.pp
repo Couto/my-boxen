@@ -100,17 +100,17 @@ node default {
     ensure => present,
   }
 
-  # Link vim folder and Install vim bundles (Dont forget to clone the rep)
-  #file { "/Users/${::boxen_user}/.vim":
-  #  ensure => link,
-  #  target => "/Users/${::boxen_user}/.dotfiles/vim",
-  #  require => Repository["/Users/${::boxen_user}/.dotfiles"]
-  #}
+  vim::bundle { [
+    'scrooloose/syntastic',
+    'scrooloose/nerdtree',
+    'Lokaltog/powerline',
+    'kien/ctrlp.vim'
+  ]: }
 
-  vim::bundle { 'scrooloose/syntastic': }
-  vim::bundle { 'scrooloose/nerdtree': }
-  vim::bundle { 'Lokaltog/powerline': }
-  vim::bundle { 'kien/ctrlp.vim': }
+  file { "${vim:vimrc}":
+    target => "/Users/${::boxen_user}/.dotfiles/link/vimrc",
+    require => Repository["/Users/${::boxen_user}/.dotfiles"]
+  }
 
   # node versions
   include nodejs::v0_10
