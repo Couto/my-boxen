@@ -107,9 +107,9 @@ node default {
     'kien/ctrlp.vim'
   ]: }
 
-  file { "${vim:vimrc}":
+  file { "${vim::vimrc}":
     target => "/Users/${::boxen_user}/.dotfiles/link/vimrc",
-    require => Repository["/Users/${::boxen_user}/.dotfiles"]
+    require => Repository["/Users/${::boxen_user}/.dotfiles"],
   }
 
   # node versions
@@ -157,11 +157,7 @@ node default {
     require => Repository["/Users/${::boxen_user}/.dotfiles"]
   }
 
-  file { "/Users/${::boxen_user}/.vimrc":
-    ensure => link,
-    target => "/Users/${::boxen_user}/.dotfiles/link/vimrc",
-    require => Repository["/Users/${::boxen_user}/.dotfiles"]
-  }
+  # vimrc is handled by the vim module
 
   file { "/Users/${::boxen_user}/.tmux.conf":
     ensure => link,
