@@ -55,7 +55,6 @@ node default {
   include git
   include hub
   include iterm2::dev
-  include phantomjs::1_9_0
   include virtualbox
   include vagrant
   include caffeine
@@ -73,15 +72,6 @@ node default {
   # fail if FDE is not enabled
   if $::root_encrypted == 'no' {
     fail('Please enable full disk encryption and try again')
-  }
-
-  # Install Sublme packages
-  sublime_text_3::package { "Package Control":
-    source => "wbond/sublime_package_control",
-  }
-
-  sublime_text_3::package { "SublimeLinter":
-    source => "SublimeLinter/SublimeLinter",
   }
 
   # Set OSX configurations
@@ -105,17 +95,17 @@ node default {
 
   # Clone my dotfiles
   repository { 'Personal dotfiles' : 
-    source => "/Users/${::boxen_user}/.dotfiles",
-    path => 'Couto/.dotfiles',
+    path => "/Users/${::boxen_user}/.dotfiles",
+    source => 'Couto/.dotfiles',
     provider => 'git',
   }
 
   # Link vim folder and Install vim bundles (Dont forget to clone the rep)
-  file { "/Users/${::boxen_user}/.vim":
-    ensure => link,
-    target => "/Users/${::boxen_user}/.dotfiles/vim",
-    require => Repository["/Users/${::boxen_user}/.dotfiles"]
-  }
+  #file { "/Users/${::boxen_user}/.vim":
+  #  ensure => link,
+  #  target => "/Users/${::boxen_user}/.dotfiles/vim",
+  #  require => Repository["/Users/${::boxen_user}/.dotfiles"]
+  #}
 
   vim::bundle { 'scrooloose/syntastic': }
   vim::bundle { 'scrooloose/nerdtree': }
@@ -144,7 +134,8 @@ node default {
       'tree',
       'z',
       'ctags',
-      'lesspipe'
+      'lesspipe',
+      'phantomjs'
     ]:
   }
 
