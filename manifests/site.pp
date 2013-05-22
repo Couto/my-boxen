@@ -59,7 +59,7 @@ node default {
   include vagrant
   include caffeine
   include firefox
-  include firefox::nightly
+  # include firefox::nightly
   include chrome::dev
   include chrome::canary
   include imageoptim
