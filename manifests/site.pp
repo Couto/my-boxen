@@ -69,8 +69,6 @@ node default {
   include skype
   include zsh
   include sublime_text_3
-  include osx
-  include repository
 
   # fail if FDE is not enabled
   if $::root_encrypted == 'no' {
@@ -94,7 +92,7 @@ node default {
   include osx::finder::unhide_library
   include osx::universal_access::ctrl_mod_zoom
  
-  include osx::global::key_repeat_delay
+  #include osx::global::key_repeat_delay
   class { 'osx::global::key_repeat_delay':
     delay => 0
   }
@@ -113,9 +111,10 @@ node default {
   }
 
   # Link vim folder and Install vim bundles (Dont forget to clone the rep)
-  file { "/Users/${::boxen_user}/.vim" :
-    target => "/Users/${::boxen_user}/.dotfiles/link/vim",
-    require => Repository["/Users/${::boxen_user}/.dotfiles"],
+  file { "/Users/${::boxen_user}/.vim":
+    ensure => link,
+    target => "/Users/${::boxen_user}/.dotfiles/vim",
+    require => Repository["/Users/${::boxen_user}/.dotfiles"]
   }
 
   vim::bundle { 'scrooloose/syntastic': }
