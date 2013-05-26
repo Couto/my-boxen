@@ -63,7 +63,7 @@ node default {
   include chrome::dev
   include chrome::canary
   include imageoptim
-  include vim
+  # include vim
   include alfred
   include skype
   include zsh
@@ -81,12 +81,14 @@ node default {
   include osx::finder::unhide_library
   include osx::universal_access::ctrl_mod_zoom
 
-  #include osx::global::key_repeat_delay
+  
   class { 'osx::global::key_repeat_delay':
     delay => 0
   }
 
-  include osx::global::key_repeat_rate
+  class { 'osx::global::key_repeat_rate':
+    rate => 5
+  }
 
   osx::recovery_message {
     'If this Mac is found, please call (+351) 919 427 831':
@@ -105,11 +107,11 @@ node default {
     'scrooloose/nerdtree',
     'Lokaltog/powerline',
     'kien/ctrlp.vim'
-  ]: }
-
-  file { "${vim::vimrc}":
-    target => "/Users/${::boxen_user}/.dotfiles/link/vimrc",
-    require => Repository["/Users/${::boxen_user}/.dotfiles"],
+  ]:
+    require => [
+        Repository["/Users/${::boxen_user}/.dotfiles"],
+        File["/Users/${::boxen_user}/.vim"]
+    ]
   }
 
   # node versions
@@ -157,7 +159,18 @@ node default {
     require => Repository["/Users/${::boxen_user}/.dotfiles"]
   }
 
-  # vimrc is handled by the vim module
+  file { "/Users/${::boxen_user}/.vim":
+    ensure => link,
+    target => "/Users/${::boxen_user}/.dotfiles/vim",
+    require => Repository["/Users/${::boxen_user}/.dotfiles"]
+  }
+
+  file { "/Users/${::boxen_user}/.vimrc":
+    ensure => link,
+    target => "/Users/${::boxen_user}/.dotfiles/link/vimrc",
+    require => Repository["/Users/${::boxen_user}/.dotfiles"]
+  }
+
 
   file { "/Users/${::boxen_user}/.tmux.conf":
     ensure => link,
