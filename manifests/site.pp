@@ -199,3 +199,4 @@ node default {
     require => Repository["/Users/${::boxen_user}/.dotfiles"]
   }
 
+}
