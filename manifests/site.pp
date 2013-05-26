@@ -63,7 +63,6 @@ node default {
   include chrome::dev
   include chrome::canary
   include imageoptim
-  # include vim
   include alfred
   include skype
   include zsh
@@ -87,7 +86,7 @@ node default {
   }
 
   class { 'osx::global::key_repeat_rate':
-    rate => 5
+    rate => 0
   }
 
   osx::recovery_message {
@@ -165,6 +164,7 @@ node default {
     require => Repository["/Users/${::boxen_user}/.dotfiles"]
   }
 
+
   file { "/Users/${::boxen_user}/.vimrc":
     ensure => link,
     target => "/Users/${::boxen_user}/.dotfiles/link/vimrc",
@@ -198,4 +198,4 @@ node default {
     group => 'staff',
     require => Repository["/Users/${::boxen_user}/.dotfiles"]
   }
-}
+
