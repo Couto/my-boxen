@@ -105,7 +105,8 @@ node default {
     'scrooloose/syntastic',
     'scrooloose/nerdtree',
     'Lokaltog/powerline',
-    'kien/ctrlp.vim'
+    'kien/ctrlp.vim',
+    'wincent/Command-T'
   ]:
     require => [
         Repository["/Users/${::boxen_user}/.dotfiles"],
