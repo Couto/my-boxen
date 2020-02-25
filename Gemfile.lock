@@ -34,7 +34,7 @@ GEM
     multipart-post (1.2.0)
     net-ssh (2.6.5)
     netrc (0.7.7)
-    nokogiri (1.10.5)
+    nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
     octokit (1.24.0)
       addressable (~> 2.2)
